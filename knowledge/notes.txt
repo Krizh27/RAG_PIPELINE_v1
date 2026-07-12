@@ -1,0 +1,9 @@
+JavaScript was created by Brendan Eich.
+
+Node.js allows JavaScript to run outside browsers.
+
+Express is a web framework for Node.js.
+
+PostgreSQL is a relational database.
+
+JWT is commonly used for authentication.
