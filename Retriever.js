@@ -26,7 +26,5 @@ export function retrieveTopK(
 
     const retrievedChunks = scoredChunks.slice(0, topK);
 
-    return retrievedChunks
-        .map(chunk => chunk.text)
-        .join("\n\n");
+    return retrievedChunks;
 }

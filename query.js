@@ -2,7 +2,8 @@ import OpenAI from "openai";
 import fs from "fs/promises";
 import dotenv from "dotenv";
 import readline from "node:readline/promises";
-import { retrieveTopK } from "./Retriever.js";
+import { retrieveTopK } from "./Retriever.js"
+import { generateAnswer } from "./llm.js";
 import { stdin as input, stdout as output } from "node:process";
 import { log } from "node:console";
 
@@ -44,12 +45,18 @@ rl.close();
 //     knowledgeBaseFile[0].embedding
 // );
 
-const context = retrieveTopK(
+const retrievedChunks = retrieveTopK(
     embeddingVector,
     knowledgeBaseFile
 );
 
-console.log(context);
+const answer = await generateAnswer(
+    userQuery,
+    retrievedChunks
+);
+
+console.log("\nAnswer:\n");
+console.log(answer);
 
 
 
