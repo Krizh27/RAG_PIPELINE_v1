@@ -190,7 +190,7 @@ JavaScript was created by Brendan Eich in 1995.
 ## Future Improvements
 
 To transition this basic pipeline into a production-ready system, the following concepts would need to be implemented:
-
+- **Use LangChain for pdf uploads and Abstraction of Embeddings**
 - **Vector Database**
 - **Metadata Filtering**
 - **Chunk Overlap**
@@ -200,8 +200,60 @@ To transition this basic pipeline into a production-ready system, the following 
 
 ---
 
-## Learning Resources
+## 📚 Learning Resources
 
-- [Placeholder: Link to OpenAI API Documentation]
-- [Placeholder: Link to Vector Database Concepts]
-- [Placeholder: Link to Comprehensive RAG Architecture Overviews]
+### My Blog
+
+- **Understanding the limitations of RAG (recommended first read)**  
+  https://krizh.hashnode.dev/where-rag-fails-understanding-the-limitations-of-retrieval-augmented-generation
+
+---
+
+### Official Documentation
+
+- **OpenAI Embeddings (`text-embedding-3-small`)**  
+  https://developers.openai.com/api/docs/models/text-embedding-3-small :contentReference[oaicite:0]{index=0}
+
+- **Qdrant Documentation**  
+  https://qdrant.tech/documentation/ :contentReference[oaicite:1]{index=1}
+
+- **How Vector Search Works (Qdrant)**  
+  https://qdrant.tech/documentation/overview/vector-search/ :contentReference[oaicite:2]{index=2}
+
+- **Vectors in Qdrant**  
+  https://qdrant.tech/documentation/manage-data/vectors/ :contentReference[oaicite:3]{index=3}
+
+---
+
+### Research Papers
+
+- **Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks (RAG Paper)**  
+  https://arxiv.org/abs/2005.11401
+
+- **REALM: Retrieval-Augmented Language Model Pre-Training**  
+  https://arxiv.org/abs/2002.08909
+
+- **Atlas: Few-shot Learning with Retrieval Augmented Language Models**  
+  https://arxiv.org/abs/2208.03299
+
+- **HyDE: Precise Zero-Shot Dense Retrieval without Relevance Labels**  
+  https://arxiv.org/abs/2212.10496
+
+---
+
+### Learn More
+
+- **LangChain RAG Tutorials**  
+  https://python.langchain.com/docs/tutorials/rag/
+
+- **LlamaIndex Documentation**  
+  https://docs.llamaindex.ai/
+
+- **Pinecone Learn**  
+  https://www.pinecone.io/learn/
+
+- **Chroma Documentation**  
+  https://docs.trychroma.com/
+
+- **FAISS Documentation**  
+  https://faiss.ai/
