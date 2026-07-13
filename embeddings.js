@@ -2,9 +2,27 @@ import OpenAI from "openai";
 import chunksArray from "./ingest.js";
 import dotenv from "dotenv";
 import fs from "fs/promises";
+
 dotenv.config();
 
-// const openai = new OpenAI({apiKey : process.env.YOUR_OPENAI_API_KEY});
+const openai = new OpenAI({apiKey : process.env.YOUR_OPENAI_API_KEY});
+
+
+export async function getQueryEmbedding(userQuery) {
+  try {
+    const response = await openai.embeddings.create({
+      model: "text-embedding-3-small",
+      input: userQuery,
+      encoding_format: "float",
+    });
+    return response.data[0].embedding;
+  } catch (error) {
+    console.error("Error generating embedding:", error);
+    throw error;
+  }
+}
+
+
 async function getEmbeddings(){
     try{
         const response = await openai.embeddings.create({

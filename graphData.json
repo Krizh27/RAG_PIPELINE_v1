@@ -1,0 +1,39 @@
+[
+  {
+    "text": "JavaScript was created by Brendan Eich.",
+    "x": 0.41964823794302,
+    "y": -0.06516095410905881,
+    "z": 0.5640581285600104
+  },
+  {
+    "text": "Node.js allows JavaScript to run outside browsers.",
+    "x": 0.3955812881683324,
+    "y": 0.23824172666448315,
+    "z": -0.07863714628507053
+  },
+  {
+    "text": "Express is a web framework for Node.js.",
+    "x": 0.22555078738811007,
+    "y": 0.17880931264657549,
+    "z": -0.5212381770391818
+  },
+  {
+    "text": "PostgreSQL is a relational database.",
+    "x": -0.7753374836909465,
+    "y": 0.3934863197417147,
+    "z": 0.15400341372958423
+  },
+  {
+    "text": "JWT is commonly used for authentication.",
+    "x": -0.26544282980851686,
+    "y": -0.7453764049437158,
+    "z": -0.118186218965343
+  },
+  {
+    "text": "Who created JavaScript?",
+    "x": 0.3276218397059347,
+    "y": -0.0601056542627403,
+    "z": 0.3597738623340051,
+    "type": "query"
+  }
+]

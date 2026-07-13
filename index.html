@@ -1,14 +1,202 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Document</title>
+    <title>RAG Embedding Visualization</title>
+    <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+    <style>
+        body { 
+            margin: 0; 
+            padding: 0; 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+            background-color: #fafafa; 
+        }
+        #controls { 
+            padding: 12px; 
+            background: #ffffff; 
+            border-bottom: 1px solid #e5e7eb; 
+            text-align: center; 
+        }
+        button { 
+            padding: 8px 16px; 
+            margin: 0 5px; 
+            cursor: pointer; 
+            font-size: 13px; 
+            font-weight: 500;
+            border: 1px solid #d1d5db; 
+            border-radius: 6px; 
+            background: #ffffff; 
+            color: #374151;
+        }
+        button:hover { 
+            background: #f3f4f6; 
+        }
+        #graph { 
+            width: 100%; 
+            height: 65vh; 
+            min-height: 400px; 
+            background: #ffffff;
+        }
+        .info-card {
+            max-width: 760px;
+            margin: 40px auto;
+            padding: 32px 40px;
+            background-color: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            color: #374151;
+            line-height: 1.6;
+            font-size: 14px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+        }
+        .info-card h3 {
+            margin-top: 0;
+            margin-bottom: 24px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #111827;
+            border-bottom: 1px solid #f3f4f6;
+            padding-bottom: 16px;
+        }
+        .note-section {
+            margin-bottom: 24px;
+        }
+        .note-section:last-child {
+            margin-bottom: 0;
+        }
+        .note-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #6b7280;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+        .note-text {
+            margin: 0;
+            color: #4b5563;
+        }
+    </style>
 </head>
 <body>
-    
 
-    <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+<div id="controls">
+    <button onclick="renderPlot('2d')">2D View</button>
+    <button onclick="renderPlot('3d')">3D View</button>
+</div>
+<div id="graph"></div>
+
+<div class="info-card">
+    <h3>Notes on the Visualization</h3>
+    
+    <div class="note-section">
+        <div class="note-text">
+            This graph shows a PCA projection of the original embedding space.
+        </div>
+    </div>
+    
+    <div class="note-section">
+        <div class="note-label">Dimensionality Reduction</div>
+        <div class="note-text">
+            PCA reduces 1536-dimensional embeddings to 2D or 3D so humans can inspect their relative positions.
+        </div>
+    </div>
+    
+    <div class="note-section">
+        <div class="note-label">Interpretation & Retrieval</div>
+        <div class="note-text">
+            The visualization is intended for interpretation only. Similarity search in this project is performed using cosine similarity on the original embeddings, not on the projected coordinates shown above.
+        </div>
+    </div>
+    
+    <div class="note-section">
+        <div class="note-label">Spatial Distortion</div>
+        <div class="note-text">
+            As with a flat map of the Earth, projecting a high-dimensional space inevitably introduces distortion. Nearby points usually indicate semantic similarity, but the displayed distances should not be treated as exact.
+        </div>
+    </div>
+</div>
+
+<script>
+let globalData = null;
+
+fetch("./graphData.json")
+.then(res => res.json())
+.then(graphData => {
+    globalData = graphData;
+    renderPlot('3d'); // Default to 3D initially
+});
+
+function renderPlot(mode) {
+    if (!globalData) return;
+
+    const documents = globalData.filter(point => point.type !== "query");
+    const query = globalData.filter(point => point.type === "query");
+
+    const is3D = mode === '3d';
+
+    const documentTrace = {
+        name: "Document",
+        x: documents.map(p => p.x),
+        y: documents.map(p => p.y),
+        customdata: documents.map(p => [p.x, p.y, p.z]),
+        hovertext: documents.map(p => p.text),
+        hovertemplate: is3D 
+            ? "%{hovertext}<br><br>PC1: %{customdata[0]:.3f}<br>PC2: %{customdata[1]:.3f}<br>PC3: %{customdata[2]:.3f}<extra></extra>"
+            : "%{hovertext}<br><br>PC1: %{customdata[0]:.3f}<br>PC2: %{customdata[1]:.3f}<extra></extra>",
+        type: is3D ? "scatter3d" : "scatter",
+        mode: "markers", // 'markers' prevents the chunk text from cluttering the plot view
+        marker: {
+            size: 8,
+            color: "blue" // Explicitly setting blue as requested
+        }
+    };
+
+    if (is3D) {
+        documentTrace.z = documents.map(p => p.z);
+    }
+
+    const queryTrace = {
+        name: "Query",
+        x: query.map(p => p.x),
+        y: query.map(p => p.y),
+        customdata: query.map(p => [p.x, p.y, p.z]),
+        text: query.map(p => "🔴 Query"),
+        hovertext: query.map(p => p.text),
+        hovertemplate: is3D 
+            ? "<b>🔴 Query</b><br>%{hovertext}<br><br>PC1: %{customdata[0]:.3f}<br>PC2: %{customdata[1]:.3f}<br>PC3: %{customdata[2]:.3f}<extra></extra>"
+            : "<b>🔴 Query</b><br>%{hovertext}<br><br>PC1: %{customdata[0]:.3f}<br>PC2: %{customdata[1]:.3f}<extra></extra>",
+        type: is3D ? "scatter3d" : "scatter",
+        mode: "markers",
+        marker: {
+            size: 12,
+            color: "red"
+        }
+    };
+
+    if (is3D) {
+        queryTrace.z = query.map(p => p.z);
+    }
+
+    const layout = {
+        title: "RAG Embedding Space",
+        hovermode: "closest",
+        margin: { t: 50, b: 50, l: 50, r: 50 }
+    };
+
+    if (is3D) {
+        layout.scene = {
+            xaxis: { title: "PC1" },
+            yaxis: { title: "PC2" },
+            zaxis: { title: "PC3" }
+        };
+    } else {
+        layout.xaxis = { title: "PC1" };
+        layout.yaxis = { title: "PC2" };
+    }
+
+    Plotly.newPlot("graph", [documentTrace, queryTrace], layout);
+}
+</script>
+
 </body>
 </html>
